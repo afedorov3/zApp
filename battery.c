@@ -12,8 +12,8 @@
  */
 typedef struct
 {
-  uint16 mV;
-  uint8 perc;
+  uint16 mV;  // battery voltage in milliVolts
+  uint8 perc; // BatteryPercentageRemaining value (unit is 0.5%)
 } bat_charge_t;
 
 /*********************************************************************
