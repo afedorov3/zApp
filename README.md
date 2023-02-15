@@ -4,8 +4,8 @@ renamed to not be confused with the original lib as some interfaces are incompat
 
 APIs:  
 alarm_reporting - AlarmMask attribute reporting.  
-battery - battery reporting.  
+battery - Battery reporting.  
 commissioning - Network commissioning.  
-debug_print - debug print interface.  
+debug_print - Debug print interface.  
 factory_reset - Factory reset handlers.  
-utils - various utility functions and macro.  
+utils - Various utility functions and macro.  
