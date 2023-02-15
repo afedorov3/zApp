@@ -1,4 +1,4 @@
-## zApp: Z-Stack auxiliary library
+## zApp: Z-Stack 3.0.2 auxiliary library
 This library is a stripped down fork of zstack-lib (https://github.com/diyruz/zstack-lib),
 renamed to not be confused with the original lib as some interfaces are incompatible.
 
