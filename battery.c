@@ -36,8 +36,15 @@ typedef struct
 #endif /* !BAT_FILTER_S */
 
 #if BAT_FILTER_S > 0
+/* Simple low-pass filter coefficient
+ *                        1
+ * FILTER = ------------------------------
+ *          Fcut-off / Fsampling * 2Pi + 1
+ *
+ * Figure below is normalized to power of two value for efficiency
+ */
 #undef BAT_FILTER
-#define BAT_FILTER (1000000/(6283/((BAT_FILTER_S)/(APP_BAT_REPORT_INTERVAL_MS/1000)) + 1000))
+#define BAT_FILTER (uint16)(1.0/(6.283/((BAT_FILTER_S)/(APP_BAT_REPORT_INTERVAL_MS/1000)) + 1.0) * 1024)
 #endif /* BAT_FILTER_S > 0 */
 
 #ifndef ADC_VREF_MV
@@ -138,7 +145,7 @@ void zclBatteryReport(bool forced)
   uint16 mV = ADC2MV(rawADC, ADC_VREF_MV, BAT_ADC_RESOLUTION);
 #ifdef BAT_FILTER
   if (zclBattery_mV != BATTERY_MV_INVALID)
-    mV = ((uint32)zclBattery_mV * BAT_FILTER + (1000 - BAT_FILTER) * (uint32)mV) / 1000;
+    mV = (uint32)((uint32)zclBattery_mV * (BAT_FILTER) + (uint32)mV * (1024 - (BAT_FILTER))) >> 10;
 #endif
   zclBattery_mV = mV;
   zclBattery_Voltage = (zclBattery_mV + 50) / 100;
@@ -155,7 +162,7 @@ void zclBatteryReport(bool forced)
     };
     zcl_SendReportCmd(POWER_CFG_ENDPOINT, &dstAddr,
                       ZCL_CLUSTER_ID_GEN_POWER_CFG, (zclReportCmd_t*)(&BatReportCmd),
-                      ZCL_FRAME_SERVER_CLIENT_DIR, FALSE, bdb_getZCLFrameCounter());
+                      ZCL_FRAME_SERVER_CLIENT_DIR, TRUE, bdb_getZCLFrameCounter());
 #ifdef BDB_REPORTING
   }
   else
